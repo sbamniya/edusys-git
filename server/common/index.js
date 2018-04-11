@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const config = require('./../config/config');
 
 const generateSalt = (length = 10)=>{
 	var text = '';
@@ -31,9 +32,43 @@ const getIpAddress = (req)=>{
 	return ip;
 }
 
+const formatValidationErr = (err, isString = false, delimeter = '<br>') =>{
+	if (typeof err !== 'object') {
+		return err;
+	}
+	var e = [];
+	for(let i in err){
+		e.push(err[i].msg)
+	}
+	if (isString===false) {
+		return e;
+	}
+	return e.join(delimeter);
+}
+
+const sendMail = (to, subject, html, callback)=>{
+	const transporter = config.mail;
+	var mailOptions = {
+		from: config.mailConfig.name+' <'+config.mailConfig.user+'>',
+	  to: to,
+	  subject: subject,
+	  html: html
+	}
+
+	transporter.sendMail(mailOptions, function(error, info){
+	  if (error) {
+	    callback(error);
+	  } else {
+	    callback(null, info.response);
+	  }
+	});
+}
+
 module.exports = {
 	generateSalt,
 	hashPassword,
 	verifyPassword,
-	getIpAddress
+	getIpAddress,
+	formatValidationErr,
+	sendMail
 }

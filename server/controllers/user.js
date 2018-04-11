@@ -39,13 +39,7 @@ const createUser = (req, res, next) => {
 }
 
 const deleteUser = (req, res, next) => {
-	user.find({}).then(data=>{
-		console.log(data);
-		res.status(200).json({success: true, data: data});
-	}, err=>{
-		console.log(err)
-		res.status(500).json({success: false, data: []});
-	})
+	
 }
 
 
