@@ -22,11 +22,16 @@ const getAllTags = (req, res, next) => {
 }
 
 const createTag = (req, res, next) => {
-	const errors = validationResult(req);
+	/*const errors = validationResult(req);
 	if (!errors.isEmpty()) {
 		return res.status(422).json({message: common.formatValidationErr(errors.mapped(), true)});
-	}
-
+	}*/
+	var tagFileUpload = common.upload.single('tagFile');
+	tagFileUpload(req, res, (err, file)=>{
+		console.log(err, file);
+		return res.status(422).json({message: 'minor upload'});
+	})	
+	return;
 	var $data = req.body;
 	$data.createdIp = common.getIpAddress(req);
 	$data.isActive = 1;
@@ -42,6 +47,25 @@ const createTag = (req, res, next) => {
 	});
 }
 
+const getTagDetails = (req, res, next) => {
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		return res.status(422).json({message: common.formatValidationErr(errors.mapped(), true)});
+	}
+	var tagId = req.body.tagId;
+	if (!common.isValidObjectId(tagId)) {
+	  res.status(400).json({success: false, message: 'Invalid tag!'});
+	  return;
+	}
+	try{
+		tag.findById(tagId).then(data=>{
+			res.status(200).json({success: true, data: data, message: 'Tag Details successfully!'})
+		});
+	}catch(e){
+		res.status(500).json({success: false, message: 'Invalid tag!'})
+	}
+}
+
 const deleteTag = (req, res, next) => {
 	
 }
@@ -49,5 +73,6 @@ const deleteTag = (req, res, next) => {
 module.exports = {
 	getAllTags,
 	createTag,
-	deleteTag
+	deleteTag,
+	getTagDetails
 };

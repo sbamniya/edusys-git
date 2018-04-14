@@ -20,6 +20,8 @@ router.delete('/users/:userId', userController.deleteUser);
 
 /**/
 router.get('/tags', tagController.getAllTags);
-router.post('/tags', validations.createTagValidation, tagController.createTag);
+router.post('/tags', tagController.createTag);
+router.post('/tag/details', validations.getTagDetailsValidation, tagController.getTagDetails);
+
 
 module.exports = router;

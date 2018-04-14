@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path');
 const http = require('http');
 const bodyParser = require('body-parser');
-var session = require('express-session')
+const session = require('express-session')
 
 // Get our API routes
 const api = require('./server/api');
@@ -12,16 +12,14 @@ const app = express();
 
 // Parsers for POST data
 app.use(bodyParser.json());
+// parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Point static path to dist
 app.use(express.static(path.join(__dirname, 'dist')));
 
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
 
-// parse application/json
-app.use(bodyParser.json());
+
 
 app.use(session({
 	secret: 'eDuMOniTORSySTEmSeSSiOnId',

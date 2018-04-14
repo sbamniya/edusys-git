@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const multer = require('multer');
 const config = require('./../config/config');
 
 const generateSalt = (length = 10)=>{
@@ -15,6 +16,7 @@ const hashPassword = (password, salt = '123456') => {
 	const hash = crypto.createHash('sha256');
 	return hash.update(password+'-'+salt).digest("hex");
 }
+
 const verifyPassword = (hashedPassword, password, salt = '123456')=>{
 	const hash = crypto.createHash('sha256');
 	var pwd = hash.update(password+'-'+salt).digest("hex");
@@ -64,11 +66,28 @@ const sendMail = (to, subject, html, callback)=>{
 	});
 }
 
+const isValidObjectId = function(id) {
+	return id.match(/^[0-9a-fA-F]{24}$/);
+}
+
+const storage = multer.diskStorage({
+  // destination
+  destination: function (req, file, cb) {
+    cb(null, './uploads/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  }
+});
+const upload = multer({ storage: storage });
+
 module.exports = {
 	generateSalt,
 	hashPassword,
 	verifyPassword,
 	getIpAddress,
 	formatValidationErr,
-	sendMail
+	sendMail,
+	isValidObjectId,
+	upload
 }

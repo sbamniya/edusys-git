@@ -14,9 +14,13 @@ const createTagValidation = [
   body('tagDescription').trim().isLength({min: 20}).withMessage('Tag description should be at least 20 character long.')
 
 ];
+const getTagDetailsValidation = [
+	body('tagId', 'Tag ID is required.').trim().isLength({min: 1})
+]
 
 module.exports = {
     loginValidation,
     updatePasswordValidation,
-    createTagValidation
+    createTagValidation,
+    getTagDetailsValidation
 }
