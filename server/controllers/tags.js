@@ -1,6 +1,7 @@
 const tag = require('./../models/tags');
 const { validationResult } = require('express-validator/check');
 const common = require('./../common');
+const fs = require('fs');
 
 const getAllTags = (req, res, next) => {
 	var limit = req.query && req.query.limit ? parseInt(req.query.limit) : 10;
@@ -22,29 +23,48 @@ const getAllTags = (req, res, next) => {
 }
 
 const createTag = (req, res, next) => {
-	/*const errors = validationResult(req);
-	if (!errors.isEmpty()) {
-		return res.status(422).json({message: common.formatValidationErr(errors.mapped(), true)});
-	}*/
 	var tagFileUpload = common.upload.single('tagFile');
 	tagFileUpload(req, res, (err, file)=>{
-		console.log(err, file);
-		return res.status(422).json({message: 'minor upload'});
-	})	
-	return;
-	var $data = req.body;
-	$data.createdIp = common.getIpAddress(req);
-	$data.isActive = 1;
-	$data.createdBy = (req.session && req.session.userData && req.session.userData.id) ? req.session.userData.id : null;
-	const newTag = new tag($data);
+		if (err) {
+			return res.status(500).json({message: 'Unable to upload file !'});
+		}
+		var $data = req.body;
+		var isError = false;
+		var errMsg = '';
+		if (!$data.tagName || $data.tagName.length<10){
+			errMsg +='Tag name can be at 10 to 120 character long.';
+			isError = true;
+		}
+		if (!req.file || !req.file.filename) {
+			errMsg += 'Tag File should be included with tag.'
+			isError = true;
+		}
+		if(!$data.tagDescription || $data.tagDescription.length<20) {
+			errMsg +='<br>Tag description should be at least 20 character long.';	
+			isError = true;	
+		}
 
-	newTag.save().then(data => {
-		console.log('user created successfully !');
-		res.status(200).json({success: true, data: data, message: 'Tag created successfully!'})
-	}, err => {
-		console.log('Error occure while creatiing user !');
-		res.status(500).json({success: false, data: []});
-	});
+		if (isError) {
+			if (req.file && req.file.filename) {
+				fs.unlink(req.file.path);			
+			}
+			return res.status(422).json({message: errMsg});
+		}
+
+		$data.createdIp = common.getIpAddress(req);
+		$data.isActive = 1;
+		$data.createdBy = (req.session && req.session.userData && req.session.userData.id) ? req.session.userData.id : null;
+		$data.fileUrl = req.file.path;
+		const newTag = new tag($data);
+
+		newTag.save().then(data => {
+			console.log('user created successfully !');
+			res.status(200).json({success: true, data: data, message: 'Tag created successfully!'})
+		}, err => {
+			console.log('Error occure while creatiing user !');
+			res.status(500).json({success: false, data: []});
+		});
+	})	
 }
 
 const getTagDetails = (req, res, next) => {

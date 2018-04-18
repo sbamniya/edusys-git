@@ -73,10 +73,11 @@ const isValidObjectId = function(id) {
 const storage = multer.diskStorage({
   // destination
   destination: function (req, file, cb) {
-    cb(null, './uploads/')
+    cb(null, './uploads')
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname);
+  	var filenameArr = file.originalname.split('.');
+    cb(null, filenameArr[0] + '-' + Date.now()+'.'+filenameArr[filenameArr.length - 1]);
   }
 });
 const upload = multer({ storage: storage });

@@ -5,8 +5,8 @@ const tagModel = {
 	tagName: String,
 	tagDescription: String,
 	location: String,
-	videoType: Number,
-	videUrl: String,
+	fileType: Number,
+	fileUrl: String,
 	country: String,
 	geoLocation: {
 		type: [Number],
