@@ -8,9 +8,13 @@ const getAllTags = (req, res, next) => {
 	var page = req.query && req.query.page ? parseInt(req.query.page) : 1;
 	var offset = limit * (page - 1);
 	var isActiveNeeded = req.query && req.query.isActive ? req.query.isActive : 0;
+	var searchKey = req.query && req.query.search ? req.query.search : null;
 	var condition = {};
 	if (isActiveNeeded) {
 		condition['isActive'] = 1;
+	}
+	if (searchKey) {
+		condition['tagName'] = new RegExp("^"+ searchKey);
 	}
 	tag.find(condition).skip(offset).limit(limit).sort({createdAt: -1}).then(data=>{
 		tag.count(condition).then(count=>{
