@@ -3,7 +3,7 @@ const db = config.db;
 
 const loginArchiveModel = { 
 	userId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: db.Schema.Types.ObjectId,
       ref: 'users'
   },
   loggedInAt: { 
