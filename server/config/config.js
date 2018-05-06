@@ -1,8 +1,12 @@
 var nodemailer = require('nodemailer');
 const smtpTransport = require('nodemailer-smtp-transport');
-
+const env = 'staging';
+var host  = 'mongodb://heroku_756c5xzq:bamniya143@ds115340.mlab.com:15340/heroku_756c5xzq'
+if (env=='dev') {
+    host = 'mongodb://localhost:27017/edu-monit-dev';
+}
 const db = {
-    host: 'mongodb://localhost:27017/edu-monit-dev',
+    host: host,
     user: 'root',
     password: ''
 }
