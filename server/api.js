@@ -14,7 +14,6 @@ router.get('/auth/get-session', authController.getUserSessionData);
 
 /**/
 router.get('/users', userController.getAllUsers);
-router.get('/users/active', userController.getActiveUsers);
 router.post('/users', userController.createUser);
 router.delete('/users/:userId', userController.deleteUser);
 
@@ -22,6 +21,6 @@ router.delete('/users/:userId', userController.deleteUser);
 router.get('/tags', tagController.getAllTags);
 router.post('/tags', tagController.createTag);
 router.post('/tag/details', validations.getTagDetailsValidation, tagController.getTagDetails);
-
+router.delete('/tag/:tagId', tagController.deleteTag);
 
 module.exports = router;

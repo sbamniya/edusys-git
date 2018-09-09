@@ -83,7 +83,7 @@ const getTagDetails = (req, res, next) => {
 	}
 	try{
 		tag.findById(tagId).then(data=>{
-			res.status(200).json({success: true, data: data, message: 'Tag Details successfully!'})
+			res.status(200).json({success: true, data: data, message: 'Tag Details fetched successfully!'})
 		});
 	}catch(e){
 		res.status(500).json({success: false, message: 'Invalid tag!'})
@@ -91,7 +91,19 @@ const getTagDetails = (req, res, next) => {
 }
 
 const deleteTag = (req, res, next) => {
-	
+	var tagId = req.params.tagId ? req.params.tagId : null;
+	if (tagId === null) {
+		res.status(422).json({success: false, message: 'Invalid tag!'});
+		return;
+	} 
+	if (!common.isValidObjectId(tagId)) {
+	  res.status(400).json({success: false, message: 'Invalid tag!'});
+	  return;
+	}
+	tag.findByIdAndRemove(tagId, data=>{
+		console.log('tag deleted successfully');
+		res.status(200).json({success: true, message: 'Tag deleted successfully!'});
+	});
 }
 
 module.exports = {

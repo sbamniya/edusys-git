@@ -49,8 +49,12 @@ const authenticate = (req, res, next) => {
 }
 
 const getUserSessionData = (req, res, next) => {
-	var response = req.session.userData ? req.session.userData : {};
-	res.status(200).json({success: true, data: response});
+	var response = req.session.userData ? req.session.userData : false;
+	if (response) {
+		res.status(200).json({success: (response) ? true : false, data: response});
+		return;
+	}
+	res.status(401).json({success: false, message: 'Unauthorized!'});
 }
 
 const sendAndUpdatePassword = (req, res, next) => {
