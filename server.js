@@ -53,6 +53,14 @@ app.use(function (req, res, next) {
 // Set our api routes
 app.use('/api/v1.0.0/', api);
 
+
+app.post("/send-email", (req, res) =>{
+  const common = require("./server/common")
+  common.sendMail('sbamniya23@gmail.com', "[Inquiry] New contact from Github.io by " + req.body['name'] + " Regarding - " + req.body["purpose"], req.body.message, (err, d)=>{
+    console.log(err, d);
+    res.status(200).json({success: true});
+  });
+})
 // Catch all other routes and return the index file
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'views/index.html'));

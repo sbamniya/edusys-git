@@ -15,7 +15,7 @@ const db = {
     password: dbpass
 }
 const user = 'sbamniya23@gmail.com';
-const pass = 'Bamniya143';
+const pass = 'Bamniya123!@#';
 const transporter = nodemailer.createTransport(smtpTransport({
     host: 'smtp.gmail.com',
     port: 465,
